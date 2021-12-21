@@ -29,30 +29,30 @@ class PersonsList extends StatelessWidget {
           if (state is PersonLoaded) {
             print(state);
             persons = state.personsList;
-            return ListView.separated(
-              itemBuilder: (context, index) {
-                return Text(persons[index].name);
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  color: Colors.grey[400],
-                );
-              },
-              itemCount: persons.length,
-            );
+            // return ListView.separated(
+            //   itemBuilder: (context, index) {
+            //     return Text(persons[index].name);
+            //   },
+            //   separatorBuilder: (context, index) {
+            //     return Divider(
+            //       color: Colors.grey[400],
+            //     );
+            //   },
+            //   itemCount: persons.length,
+            // );
           }
-          // return ListView.separated(
-          //   itemBuilder: (context, index) {
-          //     return Text(persons[index].name);
-          //   },
-          //   separatorBuilder: (context, index) {
-          //     return Divider(
-          //       color: Colors.grey[400],
-          //     );
-          //   },
-          //   itemCount: persons.length,
-          // );
-          return SizedBox.shrink();
+          return ListView.separated(
+            itemBuilder: (context, index) {
+              return Text(persons[index].name);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                color: Colors.grey[400],
+              );
+            },
+            itemCount: persons.length,
+          );
+          // return SizedBox.shrink();
         },
       ),
     );

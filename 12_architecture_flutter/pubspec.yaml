@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   business:
-    path: lib/features/business
+    path: lib/packages/business
   #provider: ^6.0.1
   # http: ^0.13.4
   get_it: ^7.2.0
