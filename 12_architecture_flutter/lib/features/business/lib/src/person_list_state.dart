@@ -12,7 +12,7 @@ class PersonEmpty extends PersonState {}
 class PersonLoading extends PersonState {}
 
 class PersonLoaded extends PersonState {
-  final List<PersonEntity> personsList;
+  final List<PersonModel> personsList;
   const PersonLoaded({required this.personsList});
 
   @override

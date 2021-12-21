@@ -7,4 +7,4 @@ abstract class PersonListEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PersonListLoaded extends PersonListEvent {}
+class PersonEventLoaded extends PersonListEvent {}
