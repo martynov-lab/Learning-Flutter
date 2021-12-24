@@ -11,7 +11,7 @@ class PersonsList extends StatelessWidget {
       ),
       body: BlocBuilder<PersonListBloc, PersonState>(
         builder: (context, state) {
-          var persons = [];
+          List persons = [];
           if (state is PersonEmpty) {
             return Center(
               child: Text(
@@ -43,7 +43,7 @@ class PersonsList extends StatelessWidget {
           }
           return ListView.separated(
             itemBuilder: (context, index) {
-              return Text(persons[index].name);
+              return Text(persons[index]);
             },
             separatorBuilder: (context, index) {
               return Divider(
