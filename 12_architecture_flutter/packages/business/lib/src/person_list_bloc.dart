@@ -1,6 +1,9 @@
 import 'package:data/module_data.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:model/model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'person_list_bloc.freezed.dart';
 
 part 'person_list_event.dart';
 part 'person_list_state.dart';
@@ -8,16 +11,18 @@ part 'person_list_state.dart';
 class PersonListBloc extends Bloc<PersonListEvent, PersonState> {
   final PersonRepository personRepository;
 
-  PersonListBloc({required this.personRepository}) : super(PersonEmpty()) {
-    on<PersonEventLoaded>((event, emit) async {
-      emit(PersonLoading());
+  PersonListBloc({required this.personRepository})
+      : super(const PersonState.empty()) {
+    on<PersonLoadedEvent>((event, emit) async {
+      emit(const PersonState.loading());
       try {
         final List<PersonModel> _loadedPersonList =
             await personRepository.getAllPersons();
-        print(_loadedPersonList);
-        emit(PersonLoaded(personsList: _loadedPersonList));
+        //print(_loadedPersonList);
+        emit(PersonState.loaded(personsList: _loadedPersonList));
       } catch (e) {
-        emit(PersonError());
+        //print(e);
+        emit(const PersonState.error());
       }
     });
   }

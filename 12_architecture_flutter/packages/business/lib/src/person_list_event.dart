@@ -1,10 +1,6 @@
 part of 'person_list_bloc.dart';
 
-abstract class PersonListEvent extends Equatable {
-  const PersonListEvent();
-
-  @override
-  List<Object> get props => [];
+@freezed
+class PersonListEvent with _$PersonListEvent {
+  const factory PersonListEvent.loaded() = PersonLoadedEvent;
 }
-
-class PersonEventLoaded extends PersonListEvent {}

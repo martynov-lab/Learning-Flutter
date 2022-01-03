@@ -1,4 +1,5 @@
 import 'package:data/module_data.dart';
+import 'package:model/model.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
@@ -11,9 +12,24 @@ class PersonRemoteDataSources implements PersonRepository {
     final response = await get(Uri.parse(_url));
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<PersonModel> persons =
-          data.map((person) => PersonModel.fromJson(person)).toList();
+      List<dynamic> data = json.decode(response.body);
+      //print(response.body);
+      // print(data);
+      List<PersonModel> persons = [];
+      for (var item in data) {
+        //print(item);
+
+        PersonModel person = PersonModel.fromJson(item);
+        persons.add(person);
+      }
+      //persons = data.map((item) => PersonModel.fromJson(item)).toList();
+      // for (var item in persons) {
+      //   print(item.name);
+      // }
+
+      // List<PersonModel> persons =
+      //     body.map((dynamic item) => PersonModel.fromJson(item)).toList();
+
       return persons;
     } else {
       throw "Unable to retrieve posts.";

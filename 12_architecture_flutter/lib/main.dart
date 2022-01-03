@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     PersonListBloc _bloc = ServiceLocatorBloc.instance.get<PersonListBloc>();
     return BlocProvider<PersonListBloc>(
-      create: (context) => _bloc..add(PersonEventLoaded()),
+      create: (context) => _bloc..add(PersonLoadedEvent()),
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(
           backgroundColor: Colors.grey,

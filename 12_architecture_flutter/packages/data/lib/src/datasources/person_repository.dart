@@ -1,4 +1,4 @@
-import 'package:data/module_data.dart';
+import 'package:model/model.dart';
 
 abstract class PersonRepository {
   Future<List<PersonModel>> getAllPersons();
