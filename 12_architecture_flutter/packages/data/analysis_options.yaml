@@ -1,4 +1,3 @@
-#include: package:analyzer/analysis_options.yaml
 import: 'package: analyzer/analysis_options.yaml'
 
 

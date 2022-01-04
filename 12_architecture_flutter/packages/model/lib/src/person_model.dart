@@ -8,7 +8,6 @@ part 'person_model.g.dart';
 
 @freezed
 class PersonModel with _$PersonModel {
-  @JsonSerializable(explicitToJson: true)
   const factory PersonModel({
     required int id,
     required String name,

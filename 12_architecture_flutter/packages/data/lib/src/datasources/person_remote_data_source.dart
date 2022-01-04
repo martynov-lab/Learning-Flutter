@@ -13,23 +13,11 @@ class PersonRemoteDataSources implements PersonRepository {
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      //print(response.body);
-      // print(data);
       List<PersonModel> persons = [];
       for (var item in data) {
-        //print(item);
-
         PersonModel person = PersonModel.fromJson(item);
         persons.add(person);
       }
-      //persons = data.map((item) => PersonModel.fromJson(item)).toList();
-      // for (var item in persons) {
-      //   print(item.name);
-      // }
-
-      // List<PersonModel> persons =
-      //     body.map((dynamic item) => PersonModel.fromJson(item)).toList();
-
       return persons;
     } else {
       throw "Unable to retrieve posts.";

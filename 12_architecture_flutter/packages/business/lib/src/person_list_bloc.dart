@@ -18,10 +18,9 @@ class PersonListBloc extends Bloc<PersonListEvent, PersonState> {
       try {
         final List<PersonModel> _loadedPersonList =
             await personRepository.getAllPersons();
-        //print(_loadedPersonList);
+
         emit(PersonState.loaded(personsList: _loadedPersonList));
       } catch (e) {
-        //print(e);
         emit(const PersonState.error());
       }
     });
