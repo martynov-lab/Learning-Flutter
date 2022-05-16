@@ -1,6 +1,7 @@
 import 'package:advanced_widgets/common/theme.dart';
 import 'package:advanced_widgets/common/theme_switcher.dart';
 import 'package:advanced_widgets/pages/home_page.dart';
+import 'package:advanced_widgets/pages/weather_indicator.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -162,9 +163,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Center(
-        child: Text(
-          'You have pushed the button this many times:',
-          style: Theme.of(context).textTheme.bodyText1,
+        child: CustomPaint(
+          painter: WeatherIndicator(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
