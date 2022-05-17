@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
               min: 0.0,
               max: 1.0,
               label: '$opacityVisible',
-              divisions: 10,
+              divisions: 100,
               value: opacityVisible,
               onChanged: (v) {
                 setState(() {

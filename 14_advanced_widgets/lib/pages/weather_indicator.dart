@@ -10,18 +10,18 @@ class WeatherIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _getSunOpacity(double value) {
-      if (value > 0.3) {
+      if (value > 0.5) {
         return 0;
       }
-      return 10 / 3 * value;
+      return -2 * value + 1;
     }
 
-    // double _getCloudOpacity(double value) {
-    //   if (value <= 0.3 && value >= 0.7) {
-    //     return 0;
-    //   }
-    //   return 10 / 3 * value - 7 / 3;
-    // }
+    double _getCloudOpacity(double value) {
+      if (value < 0.2) {
+        return 0;
+      }
+      return 10 / 8 * value - 2 / 8;
+    }
 
     double _getDropsOpacity(double value) {
       if (value < 0.7) {
@@ -47,7 +47,7 @@ class WeatherIndicator extends StatelessWidget {
           ),
         ),
         Opacity(
-          opacity: 1,
+          opacity: _getCloudOpacity(opacityVisible),
           child: SizedBox(
             height: double.infinity,
             width: double.infinity,
