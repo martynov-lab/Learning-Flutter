@@ -10,17 +10,27 @@ class WeatherIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _getSunOpacity(double value) {
-      if (value > 0.5) {
+      if (value > 0.6) {
         return 0;
       }
-      return -2 * value + 1;
+      return -10 / 6 * value + 1;
     }
 
     double _getCloudOpacity(double value) {
-      if (value < 0.2) {
+      if (value < 0.1) {
         return 0;
       }
-      return 10 / 8 * value - 2 / 8;
+      if (value > 0.7) {
+        return 1;
+      }
+      return 10 / 6 * value - 1 / 6;
+    }
+
+    double _getThunderCloudOpacity(double value) {
+      if (value < 0.7) {
+        return 0;
+      }
+      return 10 / 3 * value - 7 / 3;
     }
 
     double _getDropsOpacity(double value) {
@@ -30,10 +40,8 @@ class WeatherIndicator extends StatelessWidget {
       return 10 / 3 * value - 7 / 3;
     }
 
-    print('opacityVisible!!!: $opacityVisible');
-    print('Sun Opacity: ${_getSunOpacity(opacityVisible)}');
-    //print('Cloud Opacity: ${_getCloudOpacity(opacityVisible)}');
-    print('Drops Opacity: ${_getDropsOpacity(opacityVisible)}');
+    // print('Opacity Cloud: ${_getCloudOpacity(opacityVisible)}');
+    // print('Opacity Thunder Cloud: ${_getThunderCloudOpacity(opacityVisible)}');
     return Stack(
       children: [
         Opacity(
@@ -57,12 +65,22 @@ class WeatherIndicator extends StatelessWidget {
           ),
         ),
         Opacity(
-          opacity: _getDropsOpacity(opacityVisible),
+          opacity: _getThunderCloudOpacity(opacityVisible),
           child: SizedBox(
             height: double.infinity,
             width: double.infinity,
             child: CustomPaint(
               painter: Paint3(),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: _getDropsOpacity(opacityVisible),
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: CustomPaint(
+              painter: Paint4(),
             ),
           ),
         ),
@@ -151,6 +169,51 @@ class Paint3 extends CustomPainter {
       ..color = Colors.grey.shade800
       ..style = PaintingStyle.fill;
 
+    //облако
+    var path2 = Path()
+      ..moveTo(size.width * .1, size.height * .65)
+      ..arcToPoint(
+        Offset(
+          size.width * .1,
+          size.height * .45,
+        ),
+        clockwise: true,
+        radius: Radius.circular(size.height * .05),
+      )
+      ..quadraticBezierTo(
+        size.width * .2,
+        size.height * .2,
+        size.width * .5,
+        size.height * .3,
+      )
+      ..arcToPoint(
+        Offset(
+          size.width * .9,
+          size.height * .45,
+        ),
+        clockwise: true,
+        radius: Radius.circular(size.height * .03),
+      )
+      ..arcToPoint(
+        Offset(
+          size.width * .9,
+          size.height * .65,
+        ),
+        clockwise: true,
+        radius: Radius.circular(size.height * .03),
+      )
+      ..close();
+
+    canvas.drawPath(path2, painter3);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class Paint4 extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
     final painter4 = Paint()
       ..color = Colors.blue.shade500
       ..style = PaintingStyle.fill;

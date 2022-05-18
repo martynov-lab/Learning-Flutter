@@ -1,7 +1,9 @@
 import 'package:advanced_widgets/common/theme.dart';
 import 'package:advanced_widgets/common/theme_switcher.dart';
-import 'package:advanced_widgets/pages/weather_indicator.dart';
+import 'package:advanced_widgets/pages/animation_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../common/inner_shadow.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -31,14 +33,15 @@ class _HomePageState extends State<HomePage> {
             .backgroundColor,
       ),
       drawer: Drawer(
-        //backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor:
+            ThemeSwitcher.of(context)?.themeModel.theme.backgroundColor,
         child: Column(
           children: <Widget>[
             DrawerHeader(
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor:
-                    ThemeSwitcher.of(context)?.themeModel.theme.backgroundColor,
+                    ThemeSwitcher.of(context)?.themeModel.theme.primaryColor,
               ),
             ),
             ListTile(
@@ -124,43 +127,31 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: isShowDetailedWeather
-                    ? Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: WeatherIndicator(
-                                opacityVisible: opacityVisible),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 200,
-                            width: 200,
-                            child: WeatherIndicator(
-                                opacityVisible: opacityVisible),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text('Облачно'),
-                          const Text('12°'),
-                        ],
-                      ),
+                height: 80,
+                width: 80,
+                child: AnimationWidget(
+                  opacityVisible: opacityVisible,
+                  isShowAnimation: isShowDetailedWeather,
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
+            InnerShadow(
+              blur: 5,
+              color: Colors.black,
+              offset: const Offset(2, 2),
+              child: Text(
+                'Weather',
+                style: TextStyle(
+                    fontSize: 92,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.red[300]),
               ),
             ),
             Slider(
               activeColor: Colors.grey[300],
+              inactiveColor:
+                  ThemeSwitcher.of(context)?.themeModel.theme.primaryColor,
               min: 0.0,
               max: 1.0,
               label: '$opacityVisible',
