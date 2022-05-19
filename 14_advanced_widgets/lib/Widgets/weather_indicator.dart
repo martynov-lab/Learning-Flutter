@@ -42,49 +42,53 @@ class WeatherIndicator extends StatelessWidget {
 
     // print('Opacity Cloud: ${_getCloudOpacity(opacityVisible)}');
     // print('Opacity Thunder Cloud: ${_getThunderCloudOpacity(opacityVisible)}');
-    return Stack(
-      children: [
-        Opacity(
-          opacity: _getSunOpacity(opacityVisible),
-          child: SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: Paint1(),
+    return SizedBox(
+      height: 80,
+      width: 80,
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: _getSunOpacity(opacityVisible),
+            child: SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: Paint1(),
+              ),
             ),
           ),
-        ),
-        Opacity(
-          opacity: _getCloudOpacity(opacityVisible),
-          child: SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: Paint2(),
+          Opacity(
+            opacity: _getCloudOpacity(opacityVisible),
+            child: SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: Paint2(),
+              ),
             ),
           ),
-        ),
-        Opacity(
-          opacity: _getThunderCloudOpacity(opacityVisible),
-          child: SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: Paint3(),
+          Opacity(
+            opacity: _getThunderCloudOpacity(opacityVisible),
+            child: SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: Paint3(),
+              ),
             ),
           ),
-        ),
-        Opacity(
-          opacity: _getDropsOpacity(opacityVisible),
-          child: SizedBox(
-            height: double.infinity,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: Paint4(),
+          Opacity(
+            opacity: _getDropsOpacity(opacityVisible),
+            child: SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: Paint4(),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:advanced_widgets/common/theme.dart';
 import 'package:advanced_widgets/common/theme_switcher.dart';
 import 'package:advanced_widgets/pages/home_page.dart';
-import 'package:advanced_widgets/pages/weather_indicator.dart';
+import 'package:advanced_widgets/Widgets/weather_indicator.dart';
 import 'package:flutter/material.dart';
 
 void main() {

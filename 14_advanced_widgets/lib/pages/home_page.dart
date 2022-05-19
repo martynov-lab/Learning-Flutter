@@ -1,6 +1,7 @@
+import 'package:advanced_widgets/Widgets/weather_indicator.dart';
 import 'package:advanced_widgets/common/theme.dart';
 import 'package:advanced_widgets/common/theme_switcher.dart';
-import 'package:advanced_widgets/pages/animation_widget.dart';
+import 'package:advanced_widgets/Widgets/text_weather_indicator.dart';
 import 'package:flutter/material.dart';
 
 import '../common/inner_shadow.dart';
@@ -13,13 +14,66 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<double> scaleWeather;
+  late Animation<double> moveDownWeather;
+  late Animation<double> moveLeftWeather;
+
+  late Animation<double> moveDownText;
+  late Animation<double> scaleText;
+  late Animation<double> opacityText;
+
   ThemeData? currentTheme;
-  bool isShowDetailedWeather = false;
+  bool isShowAnimationWeather = false;
+
   double opacityVisible = 0.0;
 
   @override
+  void initState() {
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1000));
+    scaleWeather = Tween(begin: 1.0, end: 2.0).animate(
+      CurvedAnimation(
+          parent: controller, curve: Curves.easeInSine /*easeInOutBack*/),
+    );
+    moveDownWeather = Tween(begin: 0.0, end: 120.0).animate(
+      CurvedAnimation(parent: controller, curve: Curves.easeOutCubic),
+    );
+    moveLeftWeather = Tween(begin: 130.0, end: 0.0).animate(controller);
+    scaleText = Tween(begin: 0.0, end: 1.0).animate(controller);
+    moveDownText = Tween(begin: 0.0, end: 80.0).animate(controller);
+    opacityText = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: const Interval(
+          0.350,
+          1.0,
+          curve: Curves.ease,
+        ),
+      ),
+    );
+
+    controller.addListener(() {
+      print('Статус анимацию: ${controller.status}');
+      if (controller.status == AnimationStatus.completed) {
+        if (!isShowAnimationWeather) {
+          controller.reverse();
+        }
+      }
+      // if (controller.status == AnimationStatus.dismissed) {
+      //    controller.reverse();
+      // }
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    isShowAnimationWeather ? controller.forward() : controller.reverse();
+
     return Scaffold(
       backgroundColor:
           ThemeSwitcher.of(context)?.themeModel.theme.backgroundColor,
@@ -76,10 +130,9 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepPurple,
               ),
               onTap: () {
-                setState(() {
-                  ThemeSwitcher.of(context)?.themeModel.theme =
-                      deepPurpleThemeLight();
-                });
+                ThemeSwitcher.of(context)?.themeModel.theme =
+                    deepPurpleThemeLight();
+                setState(() {});
                 print('Purple');
               },
             ),
@@ -90,10 +143,9 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.indigo,
               ),
               onTap: () {
-                setState(() {
-                  ThemeSwitcher.of(context)?.themeModel.theme =
-                      indigoThemeLight();
-                });
+                ThemeSwitcher.of(context)?.themeModel.theme =
+                    indigoThemeLight();
+                setState(() {});
                 print('Indigo');
               },
             ),
@@ -104,9 +156,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.black,
               ),
               onTap: () {
-                setState(() {
-                  ThemeSwitcher.of(context)?.themeModel.theme = themeDark;
-                });
+                ThemeSwitcher.of(context)?.themeModel.theme = themeDark;
+                setState(() {});
                 print('Dark');
               },
             ),
@@ -119,23 +170,41 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isShowDetailedWeather = !isShowDetailedWeather;
-                });
-              },
-              child: SizedBox(
-                height: 80,
-                width: 80,
-                child: AnimationWidget(
-                  opacityVisible: opacityVisible,
-                  isShowAnimation: isShowDetailedWeather,
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
+            AnimatedBuilder(
+                animation: controller,
+                builder: (context, childWidget) {
+                  return Transform.translate(
+                    offset:
+                        Offset(moveLeftWeather.value, moveDownWeather.value),
+                    child: Transform.scale(
+                      scale: scaleWeather.value,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isShowAnimationWeather = !isShowAnimationWeather;
+                          });
+                          print('Показывать анимацию: $isShowAnimationWeather');
+                        },
+                        child: Stack(children: [
+                          Transform.translate(
+                            offset: Offset(0.0, moveDownText.value),
+                            child: Opacity(
+                              opacity: opacityText.value,
+                              child: Transform.scale(
+                                scale: scaleText.value,
+                                child: TextWeatherWidget(),
+                              ),
+                            ),
+                          ),
+                          WeatherIndicator(opacityVisible: opacityVisible),
+                        ]),
+                      ),
+                    ),
+                  );
+                }),
+            const SizedBox(height: 50),
             InnerShadow(
               blur: 5,
               color: Colors.black,
