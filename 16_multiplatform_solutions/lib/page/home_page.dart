@@ -31,6 +31,10 @@ class _HomePageState extends State<HomePage> {
             : Text('Adaptive', style: TextStyle(color: Colors.grey[900])),
         actions: [
           PopupMenuButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.grey[800],
+            ),
             onSelected: (result) {
               if (result == 0) {
                 setState(() {

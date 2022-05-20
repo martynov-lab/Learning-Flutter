@@ -17,11 +17,14 @@ class PersonDetails extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: Center(
+            child: Container(
+              width: 320,
+              height: 240,
               child: Image.asset(person.image, fit: BoxFit.cover),
             ),
           ),
           Expanded(
+            flex: 1,
             child: Column(children: [
               Padding(
                 padding: const EdgeInsets.only(top: 20),

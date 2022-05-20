@@ -13,6 +13,7 @@ class PersonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      itemCount: persons.length,
       itemBuilder: ((context, index) {
         final person = persons[index];
         return GestureDetector(
@@ -23,15 +24,19 @@ class PersonList extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.blueGrey[100],
-                    backgroundImage: AssetImage(person.image),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.blueGrey[100],
+                      backgroundImage: AssetImage(person.image),
+                    ),
                   ),
                 ),
                 Expanded(
                     flex: 4,
-                    child: Padding(
+                    child: Container(
+                      height: 70,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         children: [
@@ -41,7 +46,11 @@ class PersonList extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Text(person.name),
+                            child: Text(
+                              person.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
