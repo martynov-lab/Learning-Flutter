@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multiplatform_solutions/layout/narrow_layout.dart';
+import 'package:multiplatform_solutions/layout/ultra_wide_layout.dart';
 import 'package:multiplatform_solutions/layout/wide_layout.dart';
 import 'package:multiplatform_solutions/model/person.dart';
 
