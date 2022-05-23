@@ -12,10 +12,12 @@ class WebPlatformWebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('link!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: $link');
     final id = math.Random().nextInt.toString();
     ui.platformViewRegistry
         .registerViewFactory(id, (int viewId) => IFrameElement()..src = link);
     return HtmlElementView(viewType: link);
-    // return Text('link');
+
+    // return SingleChildScrollView(child: Text('link'));
   }
 }

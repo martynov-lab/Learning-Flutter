@@ -47,7 +47,7 @@ class _WebViewPageState extends State<WebViewPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   textHtml = snapshot.data ?? '';
                   // print('snapshot.data: ${snapshot.data}');
-                  // print('textHtml: $textHtml');
+                  print('textHtml: $textHtml');
                 }
                 return webView(textHtml);
               }),
@@ -105,9 +105,9 @@ class _WebViewPageState extends State<WebViewPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                setState(() {});
                                 serviceLoadURL
                                     .loadHtmlPage(_controllerInput.text);
+                                setState(() {});
                                 // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 //   content: Row(
                                 //     children: const <Widget>[
