@@ -36,7 +36,7 @@ class PersonList extends StatelessWidget {
                 Expanded(
                     flex: 4,
                     child: Container(
-                      height: 70,
+                      height: 80,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         children: [
@@ -44,12 +44,14 @@ class PersonList extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(person.name),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Text(
-                              person.description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                person.description,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ],

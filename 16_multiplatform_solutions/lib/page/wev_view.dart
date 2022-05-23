@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:multiplatform_solutions/common/app_platform.dart';
 
 import 'package:multiplatform_solutions/service/service_load_url.dart';
+import 'package:popover/popover.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({Key? key}) : super(key: key);
@@ -24,34 +25,32 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Container(
-              color: Colors.green[100],
-              child: FutureBuilder(
-                future: serviceLoadURL.loadHtmlPage(_controllerInput.text),
-                builder: ((context, AsyncSnapshot<String> snapshot) {
-                  //print('snapshot: ${snapshot.connectionState}');
-                  if (snapshot.connectionState == ConnectionState.none &&
-                      snapshot.hasData == null) {
-                    return const Center(
-                      child: Text('Ошибка загрузки!'),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+            child: FutureBuilder(
+              future: serviceLoadURL.loadHtmlPage(_controllerInput.text),
+              builder: ((context, AsyncSnapshot<String> snapshot) {
+                //print('snapshot: ${snapshot.connectionState}');
+                if (snapshot.connectionState == ConnectionState.none &&
+                    snapshot.hasData == null) {
+                  return const Center(
+                    child: Text('Ошибка загрузки!'),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    textHtml = snapshot.data ?? '';
-                    // print('snapshot.data: ${snapshot.data}');
-                    // print('textHtml: $textHtml');
-                  }
-                  return webView(textHtml);
-                }),
-              ),
+                if (snapshot.connectionState == ConnectionState.done) {
+                  textHtml = snapshot.data ?? '';
+                  // print('snapshot.data: ${snapshot.data}');
+                  // print('textHtml: $textHtml');
+                }
+                return webView(textHtml);
+              }),
             ),
           ),
           Container(
@@ -101,7 +100,7 @@ class _WebViewPageState extends State<WebViewPage> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 7),
+                          padding: const EdgeInsets.symmetric(vertical: 7),
                           height: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {

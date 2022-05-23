@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multiplatform_solutions/common/adaptive_widget.dart';
 import 'package:multiplatform_solutions/page/list_page.dart';
 import 'package:multiplatform_solutions/page/wev_view.dart';
 import 'package:multiplatform_solutions/widgets/popum_menu.dart';
@@ -28,7 +29,12 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(color: Colors.red[900])),
                 ],
               )
-            : Text('Adaptive', style: TextStyle(color: Colors.grey[900])),
+            : AdaptiveWidget(
+                ultraWide: null,
+                wide: null,
+                narrow:
+                    Text('Adaptive', style: TextStyle(color: Colors.grey[900])),
+              ),
         actions: [
           PopupMenuButton(
             icon: Icon(

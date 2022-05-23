@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:multiplatform_solutions/common/adaptive_widget.dart';
 import 'package:multiplatform_solutions/layout/narrow_layout.dart';
 import 'package:multiplatform_solutions/layout/ultra_wide_layout.dart';
 import 'package:multiplatform_solutions/layout/wide_layout.dart';
-import 'package:multiplatform_solutions/model/person.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -28,11 +28,19 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return Scaffold(body: LayoutBuilder(
       builder: ((context, constraints) {
-        return constraints.maxWidth > 600
-            ? WideLayout(
-                currentPerson: _currentPerson, onPersonTap: _onPersonTap)
-            : NarrowLayout(
-                currentPerson: _currentPerson, onPersonTap: _onPersonTap);
+        // return constraints.maxWidth > 600
+        //     ? WideLayout(
+        //         currentPerson: _currentPerson, onPersonTap: _onPersonTap)
+        //     : NarrowLayout(
+        //         currentPerson: _currentPerson, onPersonTap: _onPersonTap);
+        return AdaptiveWidget(
+          ultraWide: UltraWideLayout(
+              currentPerson: _currentPerson, onPersonTap: _onPersonTap),
+          wide: WideLayout(
+              currentPerson: _currentPerson, onPersonTap: _onPersonTap),
+          narrow: NarrowLayout(
+              currentPerson: _currentPerson, onPersonTap: _onPersonTap),
+        );
       }),
     ));
   }

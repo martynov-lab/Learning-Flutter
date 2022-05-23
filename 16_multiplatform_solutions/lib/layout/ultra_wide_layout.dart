@@ -17,6 +17,24 @@ class UltraWideLayout extends StatelessWidget {
     return Row(
       children: [
         Expanded(
+          flex: 1,
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.blue[300],
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text(
+                'Adaptive App',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
           child: PersonList(
               currentPerson: currentPerson, onPersonTap: onPersonTap),
           flex: 2,

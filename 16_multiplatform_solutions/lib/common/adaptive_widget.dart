@@ -14,7 +14,7 @@ class AdaptiveWidget extends StatelessWidget {
     if (width >= 1920 && ultraWide != null) {
       return ultraWide!;
     }
-    if (width >= 600 && wide != null) {
+    if (width >= 720 && wide != null) {
       return wide!;
     }
     if (narrow != null) {

@@ -17,17 +17,78 @@ class NarrowLayout extends StatelessWidget {
     return PersonList(
       currentPerson: currentPerson,
       onPersonTap: (index) {
-        onPersonTap(index);
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) {
-            return Scaffold(
-                appBar: AppBar(title: Text(persons[index].name)),
-                body: PersonDetails(
-                  person: persons[index],
-                ));
-          }),
-        );
+        showModalBottomSheet(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+            ),
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('VIEW PROFILE'),
+                      onTap: () {
+                        onPersonTap(index);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return Scaffold(
+                                appBar:
+                                    AppBar(title: Text(persons[index].name)),
+                                body: PersonDetails(
+                                  person: persons[index],
+                                ));
+                          }),
+                        );
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.people),
+                      title: const Text('FRIENDS'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.description_outlined),
+                      title: const Text('REPORT'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            });
       },
     );
   }
 }
+
+
+
+                //  onPressed: () {
+                //         showModalBottomSheet(
+                //             shape: const RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.only(
+                //                 topLeft: Radius.circular(20.0),
+                //                 topRight: Radius.circular(20.0),
+                //               ),
+                //             ),
+                //             context: context,
+                //             isScrollControlled: true,
+                //             builder: (context) {
+                //               return const BottomSheetFilter();
+                //             });
+                //       },
