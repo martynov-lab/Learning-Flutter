@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:multiplatform_solutions/model/person.dart';
 import 'package:multiplatform_solutions/page/person_details.dart';
 import 'package:popover/popover.dart';
@@ -18,59 +19,61 @@ class PersonGrid extends StatelessWidget {
       itemCount: persons.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
       ),
       itemBuilder: (BuildContext context, int index) {
         final person = persons[index];
         return GestureDetector(
           onTap: () {
             onPersonTap(index);
+
             showPopover(
               context: context,
               transitionDuration: const Duration(milliseconds: 150),
               bodyBuilder: (context) {
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.person),
-                        title: const Text('VIEW PROFILE'),
-                        onTap: () {
-                          onPersonTap(index);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                              return Scaffold(
-                                  appBar:
-                                      AppBar(title: Text(persons[index].name)),
-                                  body: PersonDetails(
-                                    person: persons[index],
-                                  ));
-                            }),
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.people),
-                        title: const Text('FRIENDS'),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.description_outlined),
-                        title: const Text('REPORT'),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                return Scrollbar(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.person),
+                          title: const Text('VIEW PROFILE'),
+                          onTap: () {
+                            //onPersonTap(index);
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //       builder: (BuildContext context) {
+                            //     return Scaffold(
+                            //         appBar: AppBar(
+                            //             title: Text(persons[index].name)),
+                            //         body: PersonDetails(
+                            //           person: persons[index],
+                            //         ));
+                            //   }),
+                            // );
+                          },
+                        ),
+                        const Divider(),
+                        ListTile(
+                          leading: const Icon(Icons.people),
+                          title: const Text('FRIENDS'),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const Divider(),
+                        ListTile(
+                          leading: const Icon(Icons.description_outlined),
+                          title: const Text('REPORT'),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -84,6 +87,7 @@ class PersonGrid extends StatelessWidget {
           },
           child: Card(
             color: index == currentPerson ? Colors.blue[200] : Colors.blue[300],
+            semanticContainer: false,
             child: Column(
               children: [
                 Expanded(

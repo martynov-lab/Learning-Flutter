@@ -1,6 +1,6 @@
 import 'package:multiplatform_solutions/common/mock_webview.dart'
     if (dart.library.io) 'package:multiplatform_solutions/common/nonweb_platform_webview.dart'
-    if (dart.library.io) 'package:multiplatform_solutions/common/web_platform_webview.dart';
+    if (dart.library.html) 'package:multiplatform_solutions/common/web_platform_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:multiplatform_solutions/common/app_platform.dart';
 
@@ -46,8 +46,6 @@ class _WebViewPageState extends State<WebViewPage> {
 
                 if (snapshot.connectionState == ConnectionState.done) {
                   textHtml = snapshot.data ?? '';
-                  // print('snapshot.data: ${snapshot.data}');
-                  print('textHtml: $textHtml');
                 }
                 return webView(textHtml);
               }),

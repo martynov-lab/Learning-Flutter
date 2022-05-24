@@ -13,14 +13,9 @@ class WideLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String selectedPopupRoute = "My Home";
-    final List<String> popupRoutes = <String>[
-      "My Home",
-      "Favorite Room 1",
-      "Favorite Room 2"
-    ];
-
     return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           flex: 1,
