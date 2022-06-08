@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:camera_app/services_privider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,7 @@ class _CameraWidgetState extends State<CameraWidget>
     if (state == AppLifecycleState.inactive) {
       cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      //onNewCameraSelected(cameraController.description);
+      _onNewCameraSelected(cameraController.description);
     }
   }
 
@@ -103,5 +104,27 @@ class _CameraWidgetState extends State<CameraWidget>
             },
           )),
     ]);
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  void _onNewCameraSelected(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller!.dispose();
+    }
+    final CameraController cameraController = CameraController(
+      cameraDescription,
+      kIsWeb ? ResolutionPreset.max : ResolutionPreset.medium,
+      enableAudio: true,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+    );
+    controller = cameraController;
+    cameraController.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 }
