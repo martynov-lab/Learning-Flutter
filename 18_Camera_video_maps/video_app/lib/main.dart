@@ -58,49 +58,53 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SizedBox(
-          height: 200,
-          child: Stack(
-            children: [
-              VideoPlayer(_videoPlayerController),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: VideoProgressIndicator(
-                  _videoPlayerController,
-                  allowScrubbing: false,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  bottom: 16,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.white.withOpacity(0.5),
+      body: LayoutBuilder(
+        builder: ((context, constraints) {
+          return SizedBox(
+              height: 200,
+              child: Stack(
+                children: [
+                  VideoPlayer(_videoPlayerController),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: VideoProgressIndicator(
+                      _videoPlayerController,
+                      allowScrubbing: false,
                     ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      IconButton(
-                        onPressed: () {
-                          _videoPlayerController.pause();
-                        },
-                        icon: const Icon(Icons.pause),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _videoPlayerController.play();
-                        },
-                        icon: const Icon(Icons.play_arrow),
-                      ),
-                    ]),
                   ),
-                ),
-              ),
-            ],
-          )),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      bottom: 16,
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          IconButton(
+                            onPressed: () {
+                              _videoPlayerController.pause();
+                            },
+                            icon: const Icon(Icons.pause),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _videoPlayerController.play();
+                            },
+                            icon: const Icon(Icons.play_arrow),
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
+                ],
+              ));
+        }),
+      ),
     );
   }
 }
