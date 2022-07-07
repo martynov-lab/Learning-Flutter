@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:map_app/location_service.dart';
@@ -42,12 +43,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late YandexMapController controller;
+  double sliderValue = 15.0;
 
   final List<MapObject> mapObjects = [];
 
-  final MapObjectId targetMapObjectId = MapObjectId('target_placemark');
-  Point _point = Point(latitude: 59.945933, longitude: 30.320045);
-  final animation = MapAnimation(type: MapAnimationType.smooth, duration: 2.0);
+  final MapObjectId targetMapObjectId = const MapObjectId('target_placemark');
+  late Point _point = const Point(latitude: 59.945933, longitude: 30.320045);
+  final animation =
+      const MapAnimation(type: MapAnimationType.smooth, duration: 2.0);
 
   bool tiltGesturesEnabled = true;
   bool zoomGesturesEnabled = true;
@@ -116,140 +119,215 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              YandexMap(
-                mapType: mapType,
-                poiLimit: poiLimit,
-                tiltGesturesEnabled: tiltGesturesEnabled,
-                zoomGesturesEnabled: zoomGesturesEnabled,
-                rotateGesturesEnabled: rotateGesturesEnabled,
-                scrollGesturesEnabled: scrollGesturesEnabled,
-                modelsEnabled: modelsEnabled,
-                nightModeEnabled: nightModeEnabled,
-                fastTapEnabled: fastTapEnabled,
-                mode2DEnabled: mode2DEnabled,
-                indoorEnabled: indoorEnabled,
-                liteModeEnabled: liteModeEnabled,
-                logoAlignment: MapAlignment(
-                    horizontal: HorizontalAlignment.left,
-                    vertical: VerticalAlignment.bottom),
-                focusRect: focusRect,
-                mapObjects: mapObjects,
-                onMapCreated: (YandexMapController yandexMapController) async {
-                  controller = yandexMapController;
+      body: Stack(
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            YandexMap(
+              mapType: mapType,
+              poiLimit: poiLimit,
+              tiltGesturesEnabled: tiltGesturesEnabled,
+              zoomGesturesEnabled: zoomGesturesEnabled,
+              rotateGesturesEnabled: rotateGesturesEnabled,
+              scrollGesturesEnabled: scrollGesturesEnabled,
+              modelsEnabled: modelsEnabled,
+              nightModeEnabled: nightModeEnabled,
+              fastTapEnabled: fastTapEnabled,
+              mode2DEnabled: mode2DEnabled,
+              indoorEnabled: indoorEnabled,
+              liteModeEnabled: liteModeEnabled,
+              logoAlignment: const MapAlignment(
+                  horizontal: HorizontalAlignment.left,
+                  vertical: VerticalAlignment.bottom),
+              focusRect: focusRect,
+              mapObjects: mapObjects,
+              onMapCreated: (YandexMapController yandexMapController) async {
+                controller = yandexMapController;
+                await controller.moveCamera(
+                    CameraUpdate.newCameraPosition(
+                        CameraPosition(target: _point, zoom: sliderValue)),
+                    animation: animation);
+                final cameraPosition = await controller.getCameraPosition();
+                final minZoom = await controller.getMinZoom();
+                final maxZoom = await controller.getMaxZoom();
 
-                  final cameraPosition = await controller.getCameraPosition();
-                  final minZoom = await controller.getMinZoom();
-                  final maxZoom = await controller.getMaxZoom();
+                print('Camera position: $cameraPosition');
+                print('Min zoom: $minZoom, Max zoom: $maxZoom');
+              },
+              onMapTap: (Point point) async {
+                print('Tapped map at $point');
 
-                  print('Camera position: $cameraPosition');
-                  print('Min zoom: $minZoom, Max zoom: $maxZoom');
-                },
-                onMapTap: (Point point) async {
-                  print('Tapped map at $point');
+                await controller.deselectGeoObject();
+              },
+              onMapLongTap: (Point point) => print('Long tapped map at $point'),
+              onCameraPositionChanged: (CameraPosition cameraPosition,
+                  CameraUpdateReason reason, bool finished) {
+                print('Camera position: $cameraPosition, Reason: $reason');
 
-                  await controller.deselectGeoObject();
-                },
-                onMapLongTap: (Point point) =>
-                    print('Long tapped map at $point'),
-                onCameraPositionChanged: (CameraPosition cameraPosition,
-                    CameraUpdateReason reason, bool finished) {
-                  print('Camera position: $cameraPosition, Reason: $reason');
+                if (finished) {
+                  print('Camera position movement has been finished');
+                }
+              },
+              onObjectTap: (GeoObject geoObject) async {
+                print('Tapped object: ${geoObject.name}');
 
-                  if (finished) {
-                    print('Camera position movement has been finished');
-                  }
-                },
-                onObjectTap: (GeoObject geoObject) async {
-                  print('Tapped object: ${geoObject.name}');
-
-                  if (geoObject.selectionMetadata != null) {
-                    await controller.selectGeoObject(
-                        geoObject.selectionMetadata!.id,
-                        geoObject.selectionMetadata!.layerId);
-                  }
-                },
-              ),
-
-              Positioned(
-                bottom: 30,
-                right: 30,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.place,
-                    color: Colors.grey,
-                    size: 40,
+                if (geoObject.selectionMetadata != null) {
+                  await controller.selectGeoObject(
+                      geoObject.selectionMetadata!.id,
+                      geoObject.selectionMetadata!.layerId);
+                }
+              },
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(CameraUpdate.zoomIn(),
+                                animation: animation);
+                            setState(() {
+                              sliderValue > 0 && sliderValue < 20
+                                  ? sliderValue++
+                                  : sliderValue;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 50,
+                          height: 200,
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Slider(
+                              value: sliderValue,
+                              max: 20.0,
+                              min: 1.0,
+                              onChanged: (value) async {
+                                setState(() {
+                                  sliderValue = value;
+                                });
+                                await controller.moveCamera(
+                                    CameraUpdate.zoomTo(value),
+                                    animation: animation);
+                              },
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.remove,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(CameraUpdate.zoomOut(),
+                                animation: animation);
+                            setState(() {
+                              sliderValue > 0 && sliderValue < 20
+                                  ? sliderValue--
+                                  : sliderValue;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  onPressed: () async {
-                    await controller.moveCamera(
-                        CameraUpdate.newCameraPosition(
-                            CameraPosition(target: _point)),
-                        animation: animation);
-                  },
                 ),
               ),
-
-              Positioned(
-                bottom: 100,
-                right: 30,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.navigation,
-                    color: Colors.grey,
-                    size: 40,
+            ),
+            // Expanded(
+            //   child: Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(10),
+            //       child: Container(
+            //         width: 50,
+            //         height: 200,
+            //         decoration: BoxDecoration(
+            //           color: Colors.white.withOpacity(0.8),
+            //           borderRadius: BorderRadius.circular(15),
+            //         ),
+            //         child: Transform(
+            //           alignment: FractionalOffset.center,
+            //           transform: Matrix4.identity()
+            //             ..rotateZ(90 * 3.1415927 / 180),
+            //           child: Slider(
+            //             value: sliderValue,
+            //             max: 50.0,
+            //             min: 1.0,
+            //             onChanged: (value) async {
+            //               setState(() {
+            //                 sliderValue = value;
+            //               });
+            //               await controller.moveCamera(
+            //                   CameraUpdate.zoomTo(value),
+            //                   animation: animation);
+            //             },
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            CupertinoIcons.compass_fill,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(
+                                CameraUpdate.azimuthTo(1),
+                                animation: animation);
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.location_on,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                                    target: _point, zoom: sliderValue)),
+                                animation: animation);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  onPressed: () async {
-                    await controller.moveCamera(CameraUpdate.azimuthTo(1),
-                        animation: animation);
-                  },
                 ),
               ),
-
-              // Column(children: <Widget>[
-              //   Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: <Widget>[
-              //       TextButton(
-              //         onPressed: () async {
-              //           await controller.moveCamera(CameraUpdate.zoomTo(1),
-              //               animation: animation);
-              //         },
-              //         child: Text('Specific zoom'),
-              //       ),
-              //     ],
-              //   ),
-
-              //! -------------------------------
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () async {
-                      await controller.moveCamera(CameraUpdate.zoomIn(),
-                          animation: animation);
-                    },
-                    child: Text('Zoom in'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      await controller.moveCamera(CameraUpdate.zoomOut(),
-                          animation: animation);
-                    },
-                    child: Text('Zoom out'),
-                  ),
-                ],
-              ),
-              //! -------------------------------
-            ]),
-      ),
-      //   ),
-      // ),
+            ),
+          ]),
     );
   }
 }
