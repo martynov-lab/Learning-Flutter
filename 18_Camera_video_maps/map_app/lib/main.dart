@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:map_app/location_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -44,11 +44,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late YandexMapController controller;
   double sliderValue = 15.0;
+  var latitude = 59.945933;
+  var longitude = 30.320045;
 
   final List<MapObject> mapObjects = [];
 
   final MapObjectId targetMapObjectId = const MapObjectId('target_placemark');
-  late Point _point = const Point(latitude: 59.945933, longitude: 30.320045);
+
   final animation =
       const MapAnimation(type: MapAnimationType.smooth, duration: 2.0);
 
@@ -104,12 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var locationService = Provider.of<LocationService>(context);
-    locationService.checkGps();
-    var loc = locationService.location;
-    if (loc != null) {
-      _point = Point(latitude: loc.latitude, longitude: loc.longitude);
-    }
+    Point _point = Point(latitude: latitude, longitude: longitude);
+    // var locationService = Provider.of<LocationService>(context);
+    // locationService.checkGps();
+    // var location = locationService.location;
+
+    // if (location != null) {
+    //   _point = Point(
+    //     latitude: location.latitude,
+    //     longitude: location.longitude,
+    //   );
+    //   print('latitude: ${location!.latitude}');
+    //   print('longitude: ${location!.longitude}');
+    // }
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       AndroidYandexMap.useAndroidViewSurface = false;
@@ -249,40 +258,109 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            // Expanded(
-            //   child: Align(
-            //     alignment: Alignment.bottomCenter,
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(10),
-            //       child: Container(
-            //         width: 50,
-            //         height: 200,
-            //         decoration: BoxDecoration(
-            //           color: Colors.white.withOpacity(0.8),
-            //           borderRadius: BorderRadius.circular(15),
-            //         ),
-            //         child: Transform(
-            //           alignment: FractionalOffset.center,
-            //           transform: Matrix4.identity()
-            //             ..rotateZ(90 * 3.1415927 / 180),
-            //           child: Slider(
-            //             value: sliderValue,
-            //             max: 50.0,
-            //             min: 1.0,
-            //             onChanged: (value) async {
-            //               setState(() {
-            //                 sliderValue = value;
-            //               });
-            //               await controller.moveCamera(
-            //                   CameraUpdate.zoomTo(value),
-            //                   animation: animation);
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            CupertinoIcons.arrow_up,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                                    target: Point(
+                                  latitude: latitude + 0.01,
+                                  longitude: longitude,
+                                ))),
+                                animation: animation);
+                            setState(() {
+                              latitude = latitude + 0.01;
+                            });
+                          },
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              onPressed: () async {
+                                await controller.moveCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        CameraPosition(
+                                            target: Point(
+                                      latitude: latitude,
+                                      longitude: longitude - 0.01,
+                                    ))),
+                                    animation: animation);
+                                setState(() {
+                                  longitude = longitude - 0.01;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              onPressed: () async {
+                                await controller.moveCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        CameraPosition(
+                                            target: Point(
+                                      latitude: latitude,
+                                      longitude: longitude + 0.01,
+                                    ))),
+                                    animation: animation);
+                                setState(() {
+                                  longitude = longitude + 0.01;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
+                          onPressed: () async {
+                            await controller.moveCamera(
+                                CameraUpdate.newCameraPosition(CameraPosition(
+                                    target: Point(
+                                  latitude: latitude - 0.01,
+                                  longitude: longitude,
+                                ))),
+                                animation: animation);
+                            setState(() {
+                              latitude = latitude - 0.01;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomRight,
