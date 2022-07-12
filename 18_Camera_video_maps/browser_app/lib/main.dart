@@ -31,21 +31,22 @@ class _MyHomePageState extends State<MyHomePage> {
   late WebViewController _controller;
   final CookieManager _cookieManager = CookieManager();
   String urlValur = '';
-  bool isLoading = true;
+  bool _finished = true;
+  String cookies = '';
   @override
   void initState() {
     super.initState();
     WebView.platform = SurfaceAndroidWebView();
   }
 
-  void _loadURL(String url) {
+  void _loadURL(String url) async {
+    _controller.loadUrl(url);
+    cookies = await _controller.runJavascriptReturningResult(
+      'document.cookie',
+    );
+    print('cookies $cookies');
     setState(() {
-      isLoading = true;
-    });
-    _controller.loadUrl(url).whenComplete(() {
-      setState(() {
-        isLoading = false;
-      });
+      _finished = false;
     });
   }
 
@@ -57,6 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.home),
           onPressed: () {
             _loadURL('https://google.com/');
+            setState(() {
+              _finished = false;
+            });
           },
         ),
         title: Row(
@@ -69,18 +73,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Icon(Icons.navigate_before),
                   onTap: () {
                     _controller.goBack();
+                    setState(() {
+                      _finished = false;
+                    });
                   },
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 5),
-                child: isLoading
+                child: _finished
                     ? GestureDetector(
                         child: const Icon(Icons.replay),
                         onTap: () {
                           _controller.reload();
                           setState(() {
-                            isLoading = true;
+                            _finished = false;
                           });
                         },
                       )
@@ -89,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onTap: () {
                           //_controller.;
                           setState(() {
-                            isLoading = false;
+                            _finished = true;
                           });
                         },
                       ),
@@ -97,9 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  child: const Icon(Icons.navigate_next),
+                  child: cookies.isEmpty
+                      ? Icon(
+                          Icons.navigate_next,
+                          color: Colors.grey[600],
+                        )
+                      : const Icon(Icons.navigate_next),
                   onTap: () {
                     _controller.goForward();
+                    setState(() {
+                      _finished = false;
+                    });
                   },
                 ),
               ),
@@ -152,6 +167,11 @@ class _MyHomePageState extends State<MyHomePage> {
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (controller) {
           _controller = controller;
+        },
+        onPageFinished: (String url) {
+          setState(() {
+            _finished = true;
+          });
         },
       ),
     );
