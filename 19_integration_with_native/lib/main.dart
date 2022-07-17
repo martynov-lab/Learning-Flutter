@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:integration_with_native/service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,8 +31,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _service = PlatformService();
   static const platform = MethodChannel('battery');
   String _batteryLevel = 'Unknown battery level.';
+  int _counter = 0;
+
+  void _getValue() async {
+    _counter = await _service.callMethodChannel();
+    setState(() {
+      // _counter++;
+    });
+  }
+
+  void _getStrean() async {
+    _service.callEventsChannels().listen(((event) {
+      setState(() {
+        _counter = event;
+      });
+    }));
+  }
 
   Future<void> _getBatteryLevel() async {
     String batteryLevel;
@@ -59,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               _batteryLevel,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            Text(
+              _counter.toString(),
               style: Theme.of(context).textTheme.headline4,
             ),
             Padding(
@@ -93,6 +115,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )),
               ),
+            ),
+            ElevatedButton(
+              onPressed: _getValue,
+              child: const Text('getValue'),
+            ),
+            ElevatedButton(
+              onPressed: _getStrean,
+              child: const Text('getStrean'),
             ),
             ElevatedButton(
               onPressed: () {},

@@ -4,51 +4,72 @@ import io.flutter.embedding.android.FlutterActivity
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import kotlin.random.Random
 
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
+
+// import android.content.Context
+// import android.content.ContextWrapper
+// import android.content.Intent
+// import android.content.IntentFilter
+// import android.os.BatteryManager
+// import android.os.Build.VERSION
+// import android.os.Build.VERSION_CODES
 
 class MainActivity: FlutterActivity() {
-  private val methodChannelBattery = "battery"
-  private val eventChannelText = "call_events"
-  private val methodChannelText = "call_method"
-  private val intentName = "events"
-  private val intentMessageId = "call"
+//   private val methodChannelBattery = "battery"
+  private val eventChannel = "CALL_EVENTS"
+  private val methodChannelId = "CALL_METHOD"
+  private val intentName = "EVENTS"
+  private val intentMessageId = "CALL"
+
+//   private var receiver: BroadcastReceiver? = null
+//   lateinit var job: Job
 
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-    super.configureFlutterEngine(flutterEngine)
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelBattery).setMethodCallHandler {
+   super.configureFlutterEngine(flutterEngine)
+
+   MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId).setMethodCallHandler {
       call, result ->
-		if (call.method == "getBatteryLevel") {
-			val batteryLevel = getBatteryLevel()
- 
-			if (batteryLevel != -1) {
-			  result.success(batteryLevel)
-			} else {
-			  result.error("UNAVAILABLE", "Battery level not available.", null)
-			}
-		 } else {
+		if (call.method == intentMessageId) {
+			result.success(Random.nextInt(0, 500))
+		} else {
 			result.notImplemented()
-		 }
-    }
+		}
+   }
+	// EventChannel(flutterEngine.dartExecutor, eventChannel).setStreamHandler(
+	// 	object:EventChannel.StreamHandler {
+	//  		qoverride fun onListen(args: Any?, events: EventsCannel.EventSink){
+	// 	  val intent = Intent(intentName)
+	// 	  receiver = createReceiver(events)
+	// 	  applicationContext?.registerReceiver(receiver, IntentFilter(intentName))
+	// 	  job = CoroutineScope(Dispatchers.Default).launch {
+	// 		  for (i in 1..20){
+	// 			  intent.putExtra(intentMessageId, Rendom.nextInt(0,100))
+	// 			  applicationContext?.sendBroadcast(intent)
+	// 			  delay(1000)
+	// 		   }
+	// 	   }
+	//    }
+
+	//   override fun onCancel(args:Any?){
+	// 	  job.cancel()
+	// 	  	receiver = null
+	//    }
+   // }
+	// )
   }
 
-  private fun getBatteryLevel(): Int {
-	val batteryLevel: Int
-	if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-	  val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-	  batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-	} else {
-	  val intent = ContextWrapper(applicationContext).registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-	  batteryLevel = intent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100 / intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-	}
 
-	return batteryLevel
- }
+  
+
+
+
+//   fun createReceiver (events: EventChannel.EventSink): BroadcastReceiver? {
+// 	return object : BroadcastReceiver(){
+// 		override fun onReceive(context: Context, intent: Intent){
+// 			events.success(intent.getIntExtra(intentMessageId,  0))
+// 		}
+// 	}
+//   }
 
 }

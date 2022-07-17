@@ -21,6 +21,8 @@ import Flutter
   self?.receiveBatteryLevel(result: result)
 })
 
+
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
