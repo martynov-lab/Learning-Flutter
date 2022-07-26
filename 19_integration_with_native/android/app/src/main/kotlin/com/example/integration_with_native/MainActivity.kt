@@ -16,7 +16,7 @@ import kotlin.random.Random
 // import android.os.Build.VERSION_CODES
 
 class MainActivity: FlutterActivity() {
-//   private val methodChannelBattery = "battery"
+	prinvate val androidViewId = "INEGRATION_ANDROID"
   private val eventChannel = "CALL_EVENTS"
   private val methodChannelId = "CALL_METHOD"
   private val intentName = "EVENTS"
@@ -27,11 +27,23 @@ class MainActivity: FlutterActivity() {
 
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
    super.configureFlutterEngine(flutterEngine)
+	flutterEngine
+		.platformViewController
+		.registery
+		.registerViewFactory(androidViewId, AndroidButtonViewFactory(flutterEngine.dartExecutor.binaryMessenger))
+		
 
    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId).setMethodCallHandler {
       call, result ->
 		if (call.method == intentMessageId) {
-			result.success(Random.nextInt(0, 500))
+			
+         String text = RandomFunction(call.argument("text"));
+
+         if (text != null) {
+            result.success(text);
+         } else {
+            result.error("UNAVAILABLE", "Text is null", null);
+         }
 		} else {
 			result.notImplemented()
 		}

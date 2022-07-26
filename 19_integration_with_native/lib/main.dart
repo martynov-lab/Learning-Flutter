@@ -32,12 +32,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _service = PlatformService();
-  static const platform = MethodChannel('battery');
-  String _batteryLevel = 'Unknown battery level.';
+  var _controller = TextEditingController();
+
   int _counter = 0;
 
-  void _getValue() async {
-    _counter = await _service.callMethodChannel();
+  void _getValue(String text) async {
+    _counter = await _service.callMethodChannel(text);
     setState(() {
       // _counter++;
     });
@@ -51,20 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }));
   }
 
-  Future<void> _getBatteryLevel() async {
-    String batteryLevel;
-    try {
-      final int result = await platform.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level at $result % .';
-    } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
-    }
-
-    setState(() {
-      _batteryLevel = batteryLevel;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              _batteryLevel,
+              '',
               style: Theme.of(context).textTheme.headline4,
             ),
             Text(
@@ -86,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
-                onChanged: ((value) {}),
-                onSubmitted: (value) {},
+                controller: _controller,
+
                 style: Theme.of(context).inputDecorationTheme.labelStyle,
                 //onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 decoration: const InputDecoration(
@@ -117,25 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ElevatedButton(
-              onPressed: _getValue,
-              child: const Text('getValue'),
-            ),
-            ElevatedButton(
-              onPressed: _getStrean,
-              child: const Text('getStrean'),
-            ),
-            ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _getValue(_controller.text);
+              },
               child: const Text('Submit'),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: _getBatteryLevel,
-          child: const Icon(
-            Icons.battery_full,
-          )),
     );
   }
 }
