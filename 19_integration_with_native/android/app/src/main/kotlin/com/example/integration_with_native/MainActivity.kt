@@ -1,43 +1,35 @@
-package com.example.integration_with_native
-
-import io.flutter.embedding.android.FlutterActivity
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import kotlin.random.Random
 
-class MainActivity: FlutterActivity() {
-	prinvate val androidViewId = "INEGRATION_ANDROID"
-  private val methodChannelId = "CALL_METHOD"
-  private val intentName = "EVENTS"
-  private val intentMessageId = "CALL"
+class MainActivity : FlutterActivity() {
+   private val androidViewId = "INEGRATION_ANDROID"
+   private val methodChannelId = "CALL_METHOD"
+   private val intentMessageId = "CALL"
 
-   private var receiver: BroadcastReceiver? = null
+   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+      super.configureFlutterEngine(flutterEngine)
+      // flutterEngine.platformViewsController.registry.registerViewFactory(
+      //       androidViewId,
+      //       NativeViewFactory()
+      // )
 
-  override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-   super.configureFlutterEngine(flutterEngine)
-	flutterEngine
-		.platformViewController
-		.registery
-		.registerViewFactory(androidViewId, NativeViewFactory(flutterEngine.dartExecutor.binaryMessenger))
-		
+      MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId)
+            .setMethodCallHandler { call, result ->
+               if (call.method == intentMessageId) {
+                  // String text = call.argument("text");
+                  // String batteryLevel = RandomFunction(text);
 
-   MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId).setMethodCallHandler {
-      call, result ->
-		if (call.method == intentMessageId) {
-			
-         String text = RandomFunction(call.argument("text"));
-
-         if (text != null) {
-            result.success(intent.getIntExtra(intentMessageId));
-         } else {
-            result.error("UNAVAILABLE", "Text is null", null);
-         }
-		} else {
-			result.notImplemented()
-		}
+                  // if (batteryLevel != null) {
+                  //     result.success(batteryLevel);
+                  // } else {
+                  //     result.error("UNAVAILABLE", "Battery level not available.", null);
+                  // }
+                  result.success("Привет")
+               } else {
+                  result.notImplemented()
+               }
+            }
    }
-
-  }
-
 }

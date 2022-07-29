@@ -3,17 +3,13 @@ import 'package:flutter/services.dart';
 
 class PlatformService {
   static const method = MethodChannel('CALL_METHOD');
-  static const stream = EventChannel('CALL_EVENTS');
 
-  Future<int> callMethodChannel(String text) async {
+  Future<String> callMethodChannel(String text) async {
     try {
-      return await method.invokeMethod('CALL', {'text': text});
+      return await method.invokeMethod('CALL', {"text": text});
     } on PlatformException catch (e) {
       print("Failed to get value: '${e.message}'.");
-      return 0;
+      return '';
     }
   }
-
-  Stream<int> callEventsChannels() =>
-      stream.receiveBroadcastStream().map((event) => event as int);
 }
