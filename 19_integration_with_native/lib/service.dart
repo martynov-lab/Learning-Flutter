@@ -6,7 +6,8 @@ class PlatformService {
 
   Future<String> callMethodChannel(String text) async {
     try {
-      return await method.invokeMethod('CALL', {"text": text});
+      var _text = await method.invokeMethod('CALL', {"text": text});
+      return _text;
     } on PlatformException catch (e) {
       print("Failed to get value: '${e.message}'.");
       return '';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:integration_with_native/platform_view_mobile.dart';
 
 import 'package:integration_with_native/service.dart';
 
@@ -36,8 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String _text = '';
 
   void _getValue(String text) async {
-    _text = await _service.callMethodChannel(text);
-    setState(() {});
+    var _textFromNative = await _service.callMethodChannel(text);
+    setState(() {
+      _text = _textFromNative;
+    });
   }
 
   @override
@@ -50,7 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const PlatformView(),
+            Center(
+              child: Container(
+                //color: Colors.green[200],
+                //width: 200,
+                height: 200,
+                padding: const EdgeInsets.all(20.0),
+                child: PlatformView(textFromNative: _text),
+              ),
+            ),
             Text(
               _text,
               style: Theme.of(context).textTheme.headline4,

@@ -5,7 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class PlatformView extends StatelessWidget {
-  const PlatformView({Key? key}) : super(key: key);
+  final String textFromNative;
+  const PlatformView({
+    Key? key,
+    required this.textFromNative,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +20,10 @@ class PlatformView extends StatelessWidget {
       //   onPlatformViewCreated: _onPlatformViewCreated,
       // );
       const String viewType = 'INEGRATION_ANDROID';
-      const Map<String, dynamic> creationParams = <String, dynamic>{};
-
+      Map<String, String> creationParams = <String, String>{
+        "text": textFromNative
+      };
+      print('Передаваемое значение: $textFromNative');
       return PlatformViewLink(
         viewType: viewType,
         surfaceFactory: (context, controller) {
@@ -43,7 +49,20 @@ class PlatformView extends StatelessWidget {
         },
       );
     }
+    // else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    //   view = UiKitView(
+    //     viewType: 'INEGRATION_ANDROID',
+    //     onPlatformViewCreated: _onPlatformViewCreated,
+    //   );
+    // }
+    else {
+      view = Text('$defaultTargetPlatform is not yet supported');
+    }
 
     return Container();
+  }
+
+  void _onPlatformViewCreated(String textFromNative) {
+    print('PlatformView with text: $textFromNative created');
   }
 }
