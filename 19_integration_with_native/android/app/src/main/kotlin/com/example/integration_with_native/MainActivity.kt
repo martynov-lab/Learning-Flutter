@@ -22,23 +22,23 @@ class MainActivity : FlutterActivity() {
 		flutterEngine
 		.platformViewsController
 		.registry
-		.registerViewFactory(androidViewId, NativeViewFactory())
+		.registerViewFactory(androidViewId, NativeViewFactory(flutterEngine.dartExecutor.binaryMessenger))
 
 
-      channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId)
-
-            channel.setMethodCallHandler { call, result ->
-               if (call.method == intentMessageId) {
-                  val argument = call.arguments() as Map<String, String>?
-                   val text = argument?.get("text")
-                  result.success("$text")
-
-						
-        				// textView.setText(text);
-        				// result.success(null);
-               } else {
-                  result.notImplemented()
-               }
-            }
+//      channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, methodChannelId)
+//
+//            channel.setMethodCallHandler { call, result ->
+//               if (call.method == intentMessageId) {
+//                  val argument = call.arguments() as Map<String, String>?
+//                   val text = argument?.get("text")
+//                  result.success("$text")
+//
+//
+//        				// textView.setText(text);
+//        				// result.success(null);
+//               } else {
+//                  result.notImplemented()
+//               }
+//            }
    }
 }
