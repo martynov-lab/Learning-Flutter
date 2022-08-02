@@ -11,13 +11,13 @@ import dev.flutter.example.NativeViewFactory
 
 class MainActivity : FlutterActivity() {
    private val androidViewId = "INEGRATION_ANDROID"
-   private val methodChannelId = "CALL_METHOD"
-   private val intentMessageId = "CALL"
+   // private val methodChannelId = "CALL_METHOD"
+   // private val intentMessageId = "CALL"
 	private lateinit var channel: MethodChannel
 
 
-
-   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+    @Override
+   fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
       super.configureFlutterEngine(flutterEngine)
 		flutterEngine
 		.platformViewsController

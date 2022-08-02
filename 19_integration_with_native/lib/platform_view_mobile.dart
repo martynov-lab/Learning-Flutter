@@ -23,7 +23,7 @@ class PlatformView extends StatelessWidget {
       Map<String, String> creationParams = <String, String>{
         "text": textFromNative
       };
-      print('Передаваемое значение: $textFromNative');
+
       return PlatformViewLink(
         viewType: viewType,
         surfaceFactory: (context, controller) {
