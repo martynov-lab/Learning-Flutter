@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 class PlatformView extends StatelessWidget {
   final String textFromNative;
+
   const PlatformView({
     Key? key,
     required this.textFromNative,
@@ -15,10 +16,6 @@ class PlatformView extends StatelessWidget {
   Widget build(BuildContext context) {
     late final Widget view;
     if (defaultTargetPlatform == TargetPlatform.android) {
-      // view = AndroidView(
-      //   viewType: 'INEGRATION_ANDROID',
-      //   onPlatformViewCreated: _onPlatformViewCreated,
-      // );
       const String viewType = 'INEGRATION_ANDROID';
       Map<String, String> creationParams = <String, String>{
         "text": textFromNative
